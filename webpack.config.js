@@ -1,37 +1,13 @@
-import path from "path";
-import HtmlWebpackPlugin from "html-webpack-plugin";
+const path = require("path");
 
-export default {
-  entry: "./src/main.js",
+module.exports = {
+  mode: "development",
+  devtool: false,
+  entry: {
+    main: "./src/main.js"
+  },
   output: {
-    filename: "bundle.js",
-    path: path.resolve("dist")
-  },
-  devServer: {
-    hot: true,
-    port: 8080,
-    open: true,
-    devMiddleware: {
-      writeToDisk: true
-    }
-  },
-  module: {
-    rules: [
-      {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        loader: "babel-loader",
-        options: {
-          presets: ["@babel/preset-env"]
-        }
-      }
-    ]
-  },
-  plugins: [
-    new HtmlWebpackPlugin({
-      template: "./index.html"
-    })
-  ],
-  devtool: "source-map",
-  mode: "development"
+    filename: "main.js", //定义打包后的文件名称
+    path: path.resolve(__dirname, "./dist") //必须是绝对路径
+  }
 };
