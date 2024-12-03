@@ -3,14 +3,12 @@
   ["src_test_js"],
   {
     "./src/test.js": (module, exports, require) => {
-      // Object.defineProperty(exports, "default", {
-      //   enumerable: true,
-      //   get: () => WEBPACK_DEFAULT_EXPORT
-      // });
+      require.defineProperty(exports, {
+        default: () => WEBPACK_DEFAULT_EXPORT
+      });
       const WEBPACK_DEFAULT_EXPORT = () => {
         console.log("按钮点击了");
       };
-      exports.default = () => WEBPACK_DEFAULT_EXPORT;
     }
   }
 ]);

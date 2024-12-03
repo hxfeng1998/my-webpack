@@ -11,7 +11,13 @@ const modules = {
     const buttonEle = document.getElementById("button");
     buttonEle.onclick = function () {
       //src_test_js是test.js打包后的chunkName
-      require.e("src_test_js").then(require.bind(require, "./src/test.js"));
+      require
+        .e("src_test_js")
+        .then(require.bind(require, "./src/test.js"))
+        .then(module => {
+          const print = module.default;
+          print();
+        });
     };
   }
 };
@@ -25,7 +31,7 @@ const installedChunks = {
 
 function require(moduleId) {
   if (cache[moduleId] !== undefined) {
-    return cache[moduleId];
+    return cache[moduleId].exports;
   }
   const module = (cache[moduleId] = {
     exports: {}
@@ -34,7 +40,15 @@ function require(moduleId) {
   return module.exports;
 }
 
-//
+require.defineProperty = function (exports, definition) {
+  for (const key in definition) {
+    Object.defineProperty(exports, key, {
+      enumerable: true,
+      get: definition[key]
+    });
+  }
+};
+
 require.e = function (chunkId) {
   let promises = [];
   require.j(chunkId, promises);
@@ -43,6 +57,9 @@ require.e = function (chunkId) {
 
 // 这里传入的是src_text_js
 require.j = function (chunkId, promises) {
+  if (installedChunks[chunkId] === 0) {
+    return;
+  }
   let promise = new Promise((resolve, reject) => {
     installedChunks[chunkId] = [resolve, reject]; //此时installedChunks={ main: 0, "src_test_js":[ resolve, reject ]}
   });
